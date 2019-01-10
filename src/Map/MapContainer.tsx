@@ -4,6 +4,7 @@ import { ILocation } from 'src/App/AppContainer';
 
 interface IProps {
     google: any
+    searchCoords: { lat: number; lng: number }
     locationData: ILocation[]
 }
 
@@ -19,6 +20,7 @@ const MapContainer = (props: IProps) => {
             streetViewControl={false}
             fullscreenControl={false}
             initialCenter={{ lat: 38.98, lng: -77.65 }}
+            center={props.searchCoords}
             centerAroundCurrentLocation={true} />
     )
 }

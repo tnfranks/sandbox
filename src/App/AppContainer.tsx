@@ -73,6 +73,7 @@ export interface ICountry {
 const AppContainer = () => {
     const [loading, setLoading] = React.useState(false)
     const [locations, setLocations] = React.useState([] as ILocation[])
+    const [searchCoords, setSearchCoords] = React.useState({} as { lat: number; lng: number })
     const [searchString, setSearchString] = React.useState('20132')
     const [search, setSearch] = React.useState('20132')
 
@@ -90,7 +91,8 @@ const AppContainer = () => {
             setLoading(true)
             const response = await fetch(`http://localhost:3001/pgsearch/${search}?radius=20`)
             const json = await response.json()
-            setLocations(json.data)
+            setSearchCoords(json.result.searchCoords)
+            setLocations(json.result.data)
             setLoading(false)
         } catch (error) {
             console.log(error)
@@ -110,9 +112,9 @@ const AppContainer = () => {
         <Main>
             <div style={{ padding: '.5rem', height: '100%', backgroundColor: 'saddlebrown' }}>
                 <Input type="text" value={searchString} onChange={onChangeHandler} />
-                <button style={{marginLeft: '5px', border: 'none', backgroundColor: 'saddlebrown', color: 'white'}} type="button" onClick={onButtonClick}>Search</button>
+                <button style={{ marginLeft: '5px', border: 'none', backgroundColor: 'saddlebrown', color: 'white' }} type="button" onClick={onButtonClick}>Search</button>
             </div>
-            <MapContainer locationData={locations} />
+            <MapContainer searchCoords={searchCoords} locationData={locations} />
             <div style={{ height: '100%', overflow: 'auto' }}>
                 {items}
                 <div style={{ backgroundColor: 'steelblue', color: 'white' }}>Footer</div>
