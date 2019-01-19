@@ -1,8 +1,8 @@
 import * as React from 'react'
 import MapContainer from '../Map/MapContainer';
-import { Input } from '../styles/Input'
 import { Main } from '../styles/Main'
-import ItemsContainer from './ItemsContainer'
+import Location from './Location'
+import SearchInput from './SearchInput'
 
 export interface ILocation {
     location_id: string
@@ -71,25 +71,19 @@ export interface ICountry {
 }
 
 const AppContainer = () => {
+    const [search, setSearch] = React.useState('20132')
     const [loading, setLoading] = React.useState(false)
     const [locations, setLocations] = React.useState([] as ILocation[])
-    const [searchCoords, setSearchCoords] = React.useState({} as { lat: number; lng: number })
-    const [searchString, setSearchString] = React.useState('20132')
-    const [search, setSearch] = React.useState('20132')
+    const [searchCoords, setSearchCoords] = React.useState({} as { lat: number, lng: number })
 
-    const onChangeHandler = (e: any) => {
-        setSearchString(e.target.value)
-    }
-
-    function onButtonClick() {
+    const onSearchSubmit = (searchString: string) => {
         setSearch(searchString)
     }
-
 
     const fetchData = async () => {
         try {
             setLoading(true)
-            const response = await fetch(`http://localhost:3001/pgsearch/${search}?radius=20`)
+            const response = await fetch(`http://localhost:3001/pgsearch/${search}?radius=10`)
             const json = await response.json()
             setSearchCoords(json.result.searchCoords)
             setLocations(json.result.data)
@@ -106,16 +100,15 @@ const AppContainer = () => {
     }, [search])
 
     let items: any
-    loading ? items = (<p>Loading...</p>) : items = (<ul>{locations.map(i => <ItemsContainer key={i.location_id} locationData={i} />)}</ul>)
+    loading ? items = (<p>Loading...</p>) : items = (<ul>{locations.map(i => <Location key={i.location_id} locationData={i} />)}</ul>)
 
     return (
         <Main>
-            <div style={{ padding: '.5rem', height: '100%', backgroundColor: 'saddlebrown' }}>
-                <Input type="text" value={searchString} onChange={onChangeHandler} />
-                <button style={{ marginLeft: '5px', border: 'none', backgroundColor: 'saddlebrown', color: 'white' }} type="button" onClick={onButtonClick}>Search</button>
+            <div style={{ padding: '.5rem', height: '100%', backgroundColor: '#242f3e' }}>
+                <SearchInput onSearchSubmit={onSearchSubmit} />
             </div>
             <MapContainer searchCoords={searchCoords} locationData={locations} />
-            <div style={{ height: '100%', overflow: 'auto' }}>
+            <div style={{ height: '100%', backgroundColor: '#242f3e', color: 'white', overflow: 'auto' }}>
                 {items}
                 <div style={{ backgroundColor: 'steelblue', color: 'white' }}>Footer</div>
             </div>

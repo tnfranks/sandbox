@@ -6,10 +6,10 @@ interface IProps {
     locationData: ILocation
 }
 
-const ItemsContainer = (props: IProps) => {
+const Location = (props: IProps) => {
     return (
         <li>{props.locationData.brewery.brewery_name}</li>
     )
 }
 
-export default ItemsContainer
+export default Location
