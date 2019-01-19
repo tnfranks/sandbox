@@ -105,12 +105,10 @@ const MapContainer = (props: IProps) => {
     }
 
     React.useEffect(() => {
-        console.log(props.searchCoords)
         const newBounds = new props.google.maps.LatLngBounds()
         for (const location of props.locationData) {
             newBounds.extend(new props.google.maps.LatLng(location.latitude, location.longitude))
         }
-        console.log('in bounds calc')
         setBounds(newBounds)
     }, [props.locationData])
 
